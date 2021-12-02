@@ -1,0 +1,41 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+
+namespace Market_management
+{
+    public partial class 会员主页面 : Form
+    {
+        public 会员主页面()
+        {
+            InitializeComponent();
+        }
+
+        private void 商品查看和订购ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            customer_2 customer_ = new customer_2();
+            customer_.ShowDialog();//跳转商品订购页面
+        }
+
+        private void 购买记录ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            会员充值界面 customer3 = new 会员充值界面();
+            customer3.ShowDialog();//跳转购买记录页面
+        }
+
+        private void 心愿便利贴ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            会员意见箱 customer4 = new 会员意见箱();
+            customer4.ShowDialog();//跳转意见栏页面
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+    }
+}

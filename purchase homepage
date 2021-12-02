@@ -1,0 +1,77 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+
+namespace Market_management
+{
+    public partial class customer_2 : Form
+    {
+        public customer_2()
+        {
+            InitializeComponent();
+            Table();
+        }
+
+        private void customer_2_Load(object sender, EventArgs e)
+        {
+            
+        }
+        //从数据库读取数据显示在表格控件中
+        public void Table()
+        {
+            dataGridView1.Rows.Clear();//清空旧数据
+            Dao dao = new Dao();
+            string sql = " select * from product_t";
+            IDataReader dc = dao.read(sql);
+            while (dc.Read())
+            {
+                dataGridView1.Rows.Add(dc[0].ToString(), dc[1].ToString(), dc[2].ToString(),dc[3].ToString());
+            }
+            dc.Close();
+            dao.DaoColse();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string pid = dataGridView1.SelectedRows[0].Cells[0].Value.ToString();//获取商品编号
+            int number1 = int.Parse(dataGridView1.SelectedRows[0].Cells[3].Value.ToString());//获取库存容量
+            int number2 = int.Parse(textBox1.Text);//获取顾客购入商品数量
+            string a = dataGridView1.SelectedRows[0].Cells[2].Value.ToString();//获取商品价格
+            double number3 = double.Parse(a);//string转化为double
+
+
+
+            if (number1 < 1)
+            {
+                MessageBox.Show("商品已经告罄");
+            }
+            else
+            {
+                string sql = $"insert into order1_t(cid,pid,[datetime],quantity)values('{data.UID}','{pid}',GETDATE(),{number2});update product_t set stock=stock-{number2} where pid='{pid}';update customer_t set account=account-{number2*number3} where cid='{data.UID}'";
+                Dao dao = new Dao();
+                if (dao.Execute(sql) > 2)//执行三条sql语句，大于则三条语句执行成功
+                {
+                    MessageBox.Show($"用户：{data.UName}订购了商品{pid},共消费:{number2*number3}元！");
+                    Table();
+                }
+
+            }
+                   
+
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+    }
+}

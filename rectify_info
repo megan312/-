@@ -1,0 +1,46 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+
+namespace Market_management
+{
+    public partial class 修改商品信息 : Form
+    {
+        string ID = "";
+        public 修改商品信息()
+        {
+            InitializeComponent();
+        }
+        public 修改商品信息(string pid, string pname, string price,string stock)
+        {
+            InitializeComponent();
+            ID=textBox1.Text = pid;
+            textBox2.Text = pname;
+            textBox3.Text = price;
+            textBox4.Text = stock;
+        }
+
+
+
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string sql = $"update product_t set pid='{textBox1.Text}',pname='{textBox2.Text}',price='{textBox3.Text}',stock='{textBox4.Text}' where pid='{ID}'";
+            Dao dao = new Dao();
+            if(dao.Execute(sql)>0)
+            {
+                MessageBox.Show("修改成功");
+                this.Close();
+            }
+        }
+
+        private void admin22_Load(object sender, EventArgs e)
+        {
+
+        }
+    }
+}

@@ -1,0 +1,153 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+
+namespace Market_management
+{
+    public partial class 库存管理主页面 : Form
+    {
+        public 库存管理主页面()
+        {
+            InitializeComponent();
+            
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            添加商品 a = new 添加商品();
+            a.ShowDialog();
+        }
+       
+        private void admin2_Load(object sender, EventArgs e)
+        {
+            Table();
+            label2.Text = dataGridView1.SelectedRows[0].Cells[0].Value.ToString()+ dataGridView1.SelectedRows[0].Cells[1].Value.ToString();
+
+        }
+        //从数据库读取数据显示在表格控件中
+        public void Table()
+        {
+            dataGridView1.Rows.Clear();//清空旧数据
+            Dao dao = new Dao();
+            string sql = " select*from product_t";
+            IDataReader dc = dao.read(sql);
+            while(dc.Read())
+            {
+                dataGridView1.Rows.Add(dc[0].ToString(),dc[1].ToString(),dc[2].ToString(),dc[3].ToString());
+            }
+            dc.Close();
+            dao.DaoColse();
+        }
+        //根据货号查询
+        public void TableID()
+        {
+            dataGridView1.Rows.Clear();//清空旧数据
+            Dao dao = new Dao();
+            string sql = $" select*from product_t where pid='{textBox1.Text}'";
+            IDataReader dc = dao.read(sql);
+            while (dc.Read())
+            {
+                dataGridView1.Rows.Add(dc[0].ToString(), dc[1].ToString(), dc[2].ToString(), dc[3].ToString());
+            }
+            dc.Close();
+            dao.DaoColse();
+        }
+        //根据货名查询 模糊查询
+        public void TableIDName()
+        {
+            dataGridView1.Rows.Clear();//清空旧数据
+            Dao dao = new Dao();
+            string sql = $" select*from product_t where pname like '%{textBox2.Text}%'";
+            IDataReader dc = dao.read(sql);
+            while (dc.Read())
+            {
+                dataGridView1.Rows.Add(dc[0].ToString(), dc[1].ToString(), dc[2].ToString(), dc[3].ToString());
+            }
+            dc.Close();
+            dao.DaoColse();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string id = dataGridView1.SelectedRows[0].Cells[0].Value.ToString();
+                label2.Text = id + dataGridView1.SelectedRows[0].Cells[1].Value.ToString();
+                DialogResult dr = MessageBox.Show("确认删除吗？", "信息提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);//弹出提醒的对话框
+                if (dr == DialogResult.OK)//如果确认，则执行删除操作
+                {
+                    string sql = $"delete from product_t where pid='{id}'";
+                    Dao dao = new Dao();
+                    if (dao.Execute(sql) > 0)
+                    {
+                        MessageBox.Show("删除成功");
+                        Table();//刷新表
+                    }
+                    else
+                    {
+                        MessageBox.Show("删除失败" + sql);
+                    }
+                    dao.DaoColse();
+                }
+            }
+            catch
+            {
+                MessageBox.Show("请先选中需要删除的商品信息！", "信息提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            
+              
+            
+           
+        }
+
+        private void dataGridView1_Click(object sender, EventArgs e)
+        {
+           label2.Text= dataGridView1.SelectedRows[0].Cells[0].Value.ToString() + dataGridView1.SelectedRows[0].Cells[1].Value.ToString();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string pid = dataGridView1.SelectedRows[0].Cells[0].Value.ToString();
+                string pname = dataGridView1.SelectedRows[0].Cells[1].Value.ToString();
+                string price= dataGridView1.SelectedRows[0].Cells[2].Value.ToString();
+                string stock = dataGridView1.SelectedRows[0].Cells[3].Value.ToString();
+                修改商品信息 admin = new 修改商品信息(pid,pname,price,stock);
+                admin.ShowDialog();
+                Table();//刷新数据
+            }
+            catch
+            {
+                MessageBox.Show("ERROR");
+            }
+            
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            TableIDName();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            TableID();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Table();
+            textBox1.Text = "";
+            textBox2.Text = "";
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+    }
+}

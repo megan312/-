@@ -1,0 +1,115 @@
+{
+    public partial class login : Form
+    {
+        public login()
+        {
+            InitializeComponent();
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e) //点击注册按钮时
+        {
+            if(textBox1.Text!=""&&textBox2.Text!="")
+            {
+                logins();
+            }
+            else
+            {
+                MessageBox.Show("输入项为空，请重新输入");
+            }
+               
+        }
+        //登陆验证
+        public void logins()
+        {
+            // 用户
+            if(radioButtonCustomer.Checked ==true)
+            {
+                Dao dao = new Dao();
+                string sql = $"select * from customer_t where cid='{textBox1.Text}' and psw='{textBox2.Text}'";
+                IDataReader dc = dao.read(sql);
+                if (dc.Read())
+                {
+                    data.UID = dc["cid"].ToString();
+                    data.UName = dc["cname"].ToString();
+                    MessageBox.Show("登录成功");
+                    会员主页面 customer = new 会员主页面();
+                    this.Hide();
+                    customer.ShowDialog();
+                    this.Show();
+                }
+                else
+                {
+                    MessageBox.Show("登录失败");
+                }
+                dao.DaoColse();
+            }
+            //管理员
+            if(radioButtonAdmin.Checked ==true)
+            {
+                Dao dao = new Dao();
+                string sql = $"select * from admin_t where aid='{textBox1.Text}' and psw='{textBox2.Text}'";
+                IDataReader dc = dao.read(sql);
+                if (dc.Read())
+                {
+                    MessageBox.Show("登录成功");
+                    管理员主页 a = new 管理员主页();
+                    this.Hide();
+                    a.ShowDialog();
+                    this.Show();
+                }
+                else
+                {
+                    MessageBox.Show("登录失败");
+                }
+                dao.DaoColse();
+            }
+           
+        }
+
+        private void login_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)//点击注册时
+        {
+            注册界面 r = new 注册界面();
+            r.ShowDialog();
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void radioButtonCustomer_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void radioButtonAdmin_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+    }
+}
